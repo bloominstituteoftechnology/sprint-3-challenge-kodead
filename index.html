@@ -46,6 +46,51 @@
 
     // 👉 CHALLENGE 1 - Integers
     class Integers {
+      constructor(...ints) {
+        this.ints = ints;
+    }
+
+    getAll() {
+        return this.ints;
+    }
+
+    getEvens() {
+      console.log(this.ints.filter(num => num % 2 === 0))
+        // return this.ints.filter(num => !(num %  2));
+        return this.ints.filter((int) => !(int % 2));
+    }
+
+    getNegatives() {
+        return this.ints.filter(num => num < 0);
+    }
+
+    getAllSquared() {
+        return this.ints.map(num => num ** 2);
+    }
+
+    pop() {
+        if (this.ints.length === 0) {
+            return undefined;
+        }
+        return this.ints.pop();
+    }
+
+    push(newInt) {
+        this.ints.push(newInt);
+        return this.ints;
+    }
+
+    getEveryNth(n) {
+        return this.ints.filter((num, index) => index % n === 0);
+    }
+
+    getAllReversed() {
+        return [...this.ints].reverse();
+    }
+  }
+
+
+const integer = new Integers(1, -2, 3, -4, 5);
       // 🧠 Constructor takes **any** number of arguments, which are integers
       // 🧠 Instances have an `ints` property which is an array holding the integers above in the same order
       // 🧠 Implement a `getAll` method which returns the data held in the `ints` property
@@ -59,10 +104,45 @@
       // ❗ WARNING: except for `getAllReversed`, methods must respect the order of the integers
       // ❗ WARNING: note that none of the methods actually mutate the `ints` property
 
-    }
+    
 
     // 👉 CHALLENGE 2 NerfGun
     class NerfGun {
+      
+  constructor(maxCapacity) {
+    this.maxCapacity = maxCapacity;
+    this.currentCapacity = maxCapacity;
+    this.safety = true;
+  }
+
+  shoot() {
+    if (this.currentCapacity > 0 && !this.safety) {
+      this.currentCapacity--;
+      return "Bang!";
+    } else {
+      return "Click!";
+    }
+  }
+
+  reload(number) {
+    if (typeof number !== 'number' || number <= 0) {
+      return "Error reloading!";
+    }
+
+    this.currentCapacity += number;
+
+    if (this.currentCapacity > this.maxCapacity) {
+      this.currentCapacity = this.maxCapacity;
+    }
+
+    return `${this.currentCapacity} projectiles left!`;
+  }
+
+  toggleSafety() {
+    this.safety = !this.safety;
+    return this.safety ? "Safety enabled!" : "Safety disabled!";
+  }
+}
       // 🧠 Constructor takes one argument: the total number of projectiles supported by the instance
       // 🧠 New instances initialize fully loaded and with the safety on
       // 🧠 Instances have a `shoot` method that takes no arguments:
@@ -77,10 +157,43 @@
       //      * When disengaging the safety, return "Safety disabled!"
       // 🌟 HINT: instances need to keep track of their maximum capacity as well as their current capacity
 
-    }
+    
 
     // 👉 CHALLENGE 3 EBook
     class EBook {
+    
+  constructor(text, charsPerPage) {
+    this.text = text;
+    this.charsPerPage = charsPerPage;
+    this.currentPage = 0;
+  }
+
+  next() {
+    if (this.currentPage * this.charsPerPage >= this.text.length) {
+      return null;
+    }
+
+    const start = this.currentPage * this.charsPerPage;
+    const end = start + this.charsPerPage;
+
+    this.currentPage++;
+
+    return this.text.slice(start, end);
+  }
+
+  // Optional 'back' method
+  back() {
+    if (this.currentPage === 0) {
+      return null;
+    }
+
+    this.currentPage--;
+
+    const start = this.currentPage * this.charsPerPage;
+    const end = start + this.charsPerPage;
+
+    return this.text.slice(start, end);
+  }
       // 🧠 Constructor takes two arguments:
       //      * First arg is a string with the whole text of the book
       //      * Second arg is the number of characters contained in a single page of the book
@@ -99,7 +212,42 @@
     }
 
     // 👉 CHALLENGE 4 AntFarm
-    class AntFarm {
+  //   class AntFarm {
+      
+  // constructor(...antNames) {
+  //   this.ants = antNames.map(name => ({ name, health: 100 }));
+  // }
+
+  // work() {
+  //   if (this.ants.length === 0) {
+  //     return "No ants here. Did you work them to death?";
+  //   }
+
+  //   this.ants = this.ants.map(ant => {
+  //     ant.health -= 20;
+  //     return ant;
+  //   }).filter(ant => ant.health > 0);
+
+  //   return `${this.ants.length} ants starting work!`;
+  // }
+
+  // feed(antName) {
+  //   let found = false;
+
+  //   this.ants = this.ants.map(ant => {
+  //     if (ant.name === antName) {
+  //       ant.health += 15;
+  //       found = true;
+  //     }
+  //     return ant;
+  //   });
+
+  //   if (found) {
+  //     return "Yum!";
+  //   } else {
+  //     return `${antName} not found!`;
+  //   }
+  // }
       // 🧠 Constructor takes **any** number of arguments, which are strings: the names of your ants
       // 🧠 Instances of AntFarm have an `ants` property holding an array of ants:
       //      * Each ant is an object with a `name` prop and a `health` prop that starts at 100
@@ -130,8 +278,46 @@
       //      console.log(list) // prints ["a"]
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
+      class AntFarm {
+  constructor(...antNames) {
+    this.ants = antNames.map(name => ({ name, health: 100 }));
+  }
 
+  work() {
+    const startingAnts = this.ants.length;
+
+    if (startingAnts === 0) {
+      return "No ants here. Did you work them to death?";
     }
+
+    this.ants = this.ants.map(ant => {
+      ant.health -= 20;
+      return ant;
+    }).filter(ant => ant.health > 0);
+
+    return `${startingAnts} ants starting work!`;
+  }
+
+  feed(antName) {
+    let found = false;
+
+    this.ants = this.ants.map(ant => {
+      if (ant.name === antName) {
+        ant.health += 15;
+        found = true;
+      }
+      return ant;
+    });
+
+    if (found) {
+      return "Yum!";
+    } else {
+      return `${antName} not found!`;
+    }
+  }
+}
+
+    // }
 
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
